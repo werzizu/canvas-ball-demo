@@ -20,23 +20,21 @@ window.onload = function () {
 
     var paddleHeight = 10;
     var paddleWidth = 75;
-    var paddleX = (canvas.width - paddleWidth)/2;
+    var paddleX = (canvas.width - paddleWidth)/2; //begin positionX of paddle
 
 
-    var rightPressed = false;
-    var leftPressed = false;
 
     function drawPaddle() {
         ctx.beginPath();
         ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-        ctx.fillStyle = "#0095DD";
-        ctx.fill();
+        ctx.strokeStyle = "#0095DD";
+        ctx.stroke();
         ctx.closePath();
     }
 
     function drawBall() {
         ctx.beginPath();
-        ctx.arc(x, y, ballRadius, 0, Math.PI*2, false);
+        ctx.arc(x, y, ballRadius, 2, Math.PI*2, false);
         ctx.fillStyle = "green";
         ctx.fill();
         ctx.closePath();
@@ -60,18 +58,18 @@ window.onload = function () {
             paddleX -=7;
         }
 
-        if(x + dx < ballRadius - 5 || x + dx > canvas.width + 5 - ballRadius){
+        if(x + dx < (ballRadius - 5) || x + dx > canvas.width + 5 - ballRadius){
             dx = -dx;
         }
 
         if(y + dy < ballRadius - 5){
             dy = -dy;
         } else if (y + dy > canvas.height - ballRadius) {
-            if(x > paddleX -10 && x < paddleX + paddleWidth + 10){
+            if(x > paddleX - 10 && x < paddleX + paddleWidth + 10){
                 dy = -dy;
                 if((x - paddleX) > (paddleWidth/2)){ //right part
                     dx = -(paddleWidth/2 - (x - paddleX)) / (paddleWidth / 2) * Math.abs(dy*0.7);
-                } else { //right part
+                } else { //left part
                     dx = -(paddleWidth/2 - (x - paddleX)) / (paddleWidth / 2) * Math.abs(dy*0.7);
                 }
                 // }
@@ -96,6 +94,8 @@ window.onload = function () {
     draw();
 
 
+    var rightPressed = false;
+    var leftPressed = false;
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
     document.addEventListener("mousemove", mouseMoveHandler, false);
@@ -118,6 +118,8 @@ window.onload = function () {
     }
 
     function mouseMoveHandler(e) {
+        console.log("e.clientX", e.clientX);
+        console.log("canvas.offsetLeft", canvas.offsetLeft);
         var relativeX = e.clientX - canvas.offsetLeft;
         if(relativeX > 0 && relativeX < canvas.width) {
             paddleX = relativeX - paddleWidth/2;
