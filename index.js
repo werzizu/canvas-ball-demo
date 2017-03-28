@@ -5,8 +5,14 @@ window.onload = function () {
     var x = canvas.width/2;
     var y = canvas.height - 30;
 
-    var dx = 2;
+    var dx = -getRandomArbitary(-2,2);
     var dy = -2;
+
+    function getRandomArbitary(min, max)
+    {
+        return Math.random() * (max - min) + min;
+    }
+
 
     var score = 0;
 
@@ -61,12 +67,18 @@ window.onload = function () {
         if(y + dy < ballRadius - 5){
             dy = -dy;
         } else if (y + dy > canvas.height - ballRadius) {
-            if(x > paddleX && x < paddleX + paddleWidth){
+            if(x > paddleX -10 && x < paddleX + paddleWidth + 10){
                 dy = -dy;
+                if((x - paddleX) > (paddleWidth/2)){ //right part
+                    dx = -(paddleWidth/2 - (x - paddleX)) / (paddleWidth / 2) * Math.abs(dy*0.7);
+                } else { //right part
+                    dx = -(paddleWidth/2 - (x - paddleX)) / (paddleWidth / 2) * Math.abs(dy*0.7);
+                }
+                // }
             } else {
                 lives--;
                 if(!lives) {
-                    alert("GAME OVER");
+                    alert("ПОТРАЧЕНО");
                     document.location.reload();
                 }
                 else {
@@ -155,7 +167,7 @@ window.onload = function () {
                 var b = bricks[c][r];
                 if(b.status == 1){
                     if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
-                        dy = -dy;
+                        dy = dy > 0 ? -(dy + 1) : -(dy - 1);
                         score++;
                         b.status = 0;
                         if(score == brickRowCount*brickColumnCount) {
